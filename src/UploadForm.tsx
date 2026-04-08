@@ -3,17 +3,29 @@ import {html} from '@codemirror/lang-html';
 import './UploadForm.css';
 import uploadIcon from './media/upload.png';
 import {useState} from 'react';
+import { uploadHtml, type Tag, type UploadHtmlResponse } from './services/api';
 
-function UploadForm() {
+function UploadForm(props: {
+    setTags: (tags: Tag[]) => void
+}) {
     const [htmlText, setHtmlText] = useState<string>('');
 
+    async function submit() {
+        try {
+            const data: UploadHtmlResponse = await uploadHtml({ html: htmlText });
+            props.setTags(data.tags);
+        } catch (err: any) {
+            console.log(err.message);
+        }
+    }
+
     return (
-        <form className='form flex flex-col w-[60vw] h-[80vh] rounded-2xl shadow-xl p-8'>
-            <button className='flex flex-row items-center mt-8 gap-2 upload-button rounded-lg px-8 py-3 cursor-pointer self-center font-medium text-xl'>
+        <div className='form flex flex-col w-[60vw] h-[80vh] rounded-2xl shadow-xl p-8'>
+            <button className='flex flex-row items-center gap-2 upload-button rounded-lg px-8 py-3 cursor-pointer self-center font-medium text-xl'>
                 Upload File
                 <img src={uploadIcon} className='w-7 h-7'/>
             </button>
-            <label className='text-base text-gray-400 mt-4'>Or paste here</label>
+            <label className='text-base text-gray-400 mt-2'>Or paste here</label>
             <CodeMirror
                 value={htmlText}
                 onChange={(value: string) => setHtmlText(value)}
@@ -21,7 +33,13 @@ function UploadForm() {
                 extensions={[html()]}
                 className='text-blue-400'
             />
-        </form>
+            <button 
+                className='flex flex-row items-center mt-6 upload-button rounded-lg px-8 py-3 cursor-pointer self-center font-medium text-xl'
+                onClick={submit}
+            >
+                Submit
+            </button>
+        </div>
     )
 }
 
