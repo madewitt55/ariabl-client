@@ -4,26 +4,47 @@ import './HtmlTag.css';
 // Void elements can not have children and only consist of an open tag
 const VOID_ELEMENTS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
 
+const ERROR_MESSAGES: Record<string, { name: string; message: string }> = {
+    UNCLOSED:        { name: 'Unclosed Tag',       message: 'This tag is never closed.' },
+    SELF_CLOSING:    { name: 'Self-Closing Tag',   message: 'Non-void element closed with />.' },
+    NOT_SELF_CLOSING:{ name: 'Not Self-Closing',   message: 'Void element should use />.' },
+    HAS_CHILDREN:    { name: 'Invalid Children',   message: 'Void elements cannot have children.' },
+    HAS_TEXT:        { name: 'Invalid Text',        message: 'Void elements cannot contain text.' },
+    CLOSED:          { name: 'Explicit Close Tag',  message: 'Void element has an explicit closing tag.' },
+};
+
 function HtmlTag(props: {
     tag: Tag,
 }) {
-
     const isVoidElement: boolean = VOID_ELEMENTS.has(props.tag.tagName);
     const isSelfClosing: boolean = props.tag.error === 'SELF_CLOSING' || (isVoidElement && props.tag.error === null);
     const isClosed: boolean = (!isVoidElement && props.tag.error !== 'UNCLOSED' && props.tag.error !== 'SELF_CLOSING') || (isVoidElement && props.tag.error === 'CLOSED');
 
     return (
         <>
-        <div className='tag-body flex flex-row rounded-lg border font-mono w-full overflow-hidden'>
+        <div className='tag-body flex flex-row rounded-lg border font-mono w-full'>
             {/* Tag name eg. <h1>, <div>, <p> */}
             <div
-                className={`tag-section px-4 py-2 text-xl font-bold ${props.tag.error ? 'text-red-400' : ''}`}
+                className={`tag-section relative group px-4 py-2 text-xl font-bold select-none 
+                        ${props.tag.error ? (props.tag.error === 'NOT_SELF_CLOSING' ? 'text-yellow-400' : 'text-red-400') : ''}`}
             >
                 {`<${props.tag.tagName}`}
                 {(isSelfClosing) ? (
                     '/>'
                 ): '>'}
-                
+                <div
+                    className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden text-base font-normal rounded px-2 py-1 whitespace-nowrap
+                        ${props.tag.error ? 'group-hover:block' : ''}
+                        ${props.tag.error === 'NOT_SELF_CLOSING'
+                            ? 'bg-yellow-900 text-yellow-300 border border-yellow-600'
+                            : 'bg-red-900 text-red-300 border border-red-600'
+                        }`}
+                >
+                    {props.tag.error && <>
+                        <span className='font-bold'>{ERROR_MESSAGES[props.tag.error].name}: </span>
+                        {ERROR_MESSAGES[props.tag.error].message}
+                    </>}
+                </div>
             </div>
             {/* Text contained within the tag */}
             <div className='tag-section px-4 py-2 flex-1 text-sm self-center'>

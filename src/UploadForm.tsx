@@ -34,7 +34,7 @@ function UploadForm(props: {
             {/* Hidden file input */}
             <input 
                 ref={fileInputRef}
-                type='file' accept='.html'
+                type='file' accept='.html,.htm' /* .html and .htm files only */
                 className='hidden'
                 onChange={handleFileChange}
             />
