@@ -13,8 +13,8 @@ export type Tag = {
     tagName: string; // ex. h1, h2, div
     innerText: string; // ex. <h1> INNER TEXT </h1>
     attributes: Record<string, string>; // ex. <h1 attr="attr"></h1>
-    parentId: number | null;
-    error: 'UNCLOSED' | 'CLOSED' | 'SELF_CLOSING' | 'HAS_CHILDREN' | 'HAS_TEXT' | null;
+    children: Tag[];
+    error: 'UNCLOSED' | 'CLOSED' | 'SELF_CLOSING' | 'NOT_SELF_CLOSING' | null;
 };
 export interface UploadHtmlResponse {
     tags: Tag[];
