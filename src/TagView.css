@@ -1,0 +1,34 @@
+.action-panel {
+    background-color: #31363F;
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.tag-view {
+    background-color: #31363F;
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    padding-right: 1.5rem;
+}
+
+.tag-view::-webkit-scrollbar {
+    width: 16px;
+}
+
+.tag-view::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 12px 0;
+}
+
+.tag-view::-webkit-scrollbar-thumb {
+    background: #3d5278;
+    border-radius: 8px;
+    border: 5px solid #31363F;
+    background-clip: padding-box;
+}
+
+.tag-view::-webkit-scrollbar-thumb:hover {
+    background: #7eb8f7;
+    border: 5px solid #31363F;
+    background-clip: padding-box;
+}
