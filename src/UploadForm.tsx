@@ -7,8 +7,8 @@ import { uploadHtml, type Tag, type UploadHtmlResponse } from './services/api';
 
 function UploadForm(props: {
     setTags: (tags: Tag[]) => void,
-    htmlText: string,
-    setHtmlText: (text: string) => void
+    originalHtml: string,
+    setOriginalHtml: (text: string) => void
 }) {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -16,15 +16,14 @@ function UploadForm(props: {
         const file = e.target.files?.[0];
         if (!file) return;
         const reader = new FileReader();
-        reader.onload = (ev) => props.setHtmlText(ev.target?.result as string);
+        reader.onload = (ev) => props.setOriginalHtml(ev.target?.result as string);
         reader.readAsText(file);
     }
 
     async function submit() {
         try {
-            const data: UploadHtmlResponse = await uploadHtml({ html: props.htmlText });
+            const data: UploadHtmlResponse = await uploadHtml({ html: props.originalHtml });
             props.setTags(data.tags);
-            console.log(data.tags)
         } catch (err: any) {
             console.log(err.message);
         }
@@ -48,8 +47,8 @@ function UploadForm(props: {
             </button>
             <label className='text-base text-gray-400 mt-2'>Or paste here</label>
             <CodeMirror
-                value={props.htmlText}
-                onChange={(value: string) => props.setHtmlText(value)}
+                value={props.originalHtml}
+                onChange={(value: string) => props.setOriginalHtml(value)}
                 height="50vh"
                 extensions={[html()]}
                 className='text-blue-400'
