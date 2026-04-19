@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 import UploadForm from './UploadForm';
 import {parseHtml, restructureHtml, validateHtmlStructure, type Tag} from './services/api';
@@ -6,6 +7,7 @@ import TagView from './TagView';
 import Editor from './Editor';
 
 function App() {
+    const navigate = useNavigate();
     const [tags, setTags] = useState<Tag[]>();
     const [code, setCode] = useState<string>('');
     const [validCode, setValidCode] = useState<boolean>(false);
@@ -49,7 +51,10 @@ function App() {
 
     async function updateCode(html: string): Promise<void> {
         const tags: Tag[] = await parse(html);
-        if (!tags.length) return;
+        if (!tags.length) return; // No tags, return
+
+        //if (html === code) return; // No changes, return
+
         setTags(tags);
         setHeading('Analyzing code...');
         setSubheading('');
@@ -115,6 +120,7 @@ function App() {
                     <div className='action-panel flex flex-col gap-2 p-4 rounded-2xl ml-4'>
                         <button
                             disabled={!validCode}
+                            onClick={() => navigate('/optimize', { state: { tags, code } })}
                             className={`rounded-lg px-6 py-3 font-medium text-lg transition-colors
                                 ${!validCode
                                     ? 'bg-gray-600 text-gray-400 cursor-not-allowed opacity-50'

@@ -20,6 +20,7 @@
     "react": "^19.2.4",
     "react-codemirror-merge": "^4.25.9",
     "react-dom": "^19.2.4",
+    "react-router-dom": "^7.14.1",
     "tailwindcss": "^4.2.2",
     "zod": "^4.3.6"
   },

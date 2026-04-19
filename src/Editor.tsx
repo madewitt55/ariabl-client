@@ -13,8 +13,9 @@ function Editor(props: {
     setSuggestedCode: (html: string) => void;
 }) {
     const [code, setCode] = useState<string>(props.code);
+    const [accepted, setAccepted] = useState<boolean>(false);
 
-    if (!props.suggestedCode.length) {
+    if (!props.suggestedCode.length || accepted) {
         return (
             <div className='flex flex-col h-full'>
                 <span className='text-center text-lg font-medium text-gray-300 mb-2'>Your Code</span>
@@ -23,6 +24,14 @@ function Editor(props: {
                     theme={vscodeDark}
                     extensions={[html(), scrollX]}
                 />
+                {accepted && (
+                    <button
+                        className='bg-green-600 hover:bg-green-700 text-white rounded-lg px-8 py-3 cursor-pointer font-medium text-lg transition-colors self-center mt-6'
+                        onClick={() => props.update(code)}
+                    >
+                        Save
+                    </button>
+                )}
             </div>
         );
     }
@@ -45,16 +54,23 @@ function Editor(props: {
                     editable={false}
                 />
             </CodeMirrorMerge>
-            <button
-                className='upload-button rounded-lg px-8 py-3 cursor-pointer font-medium text-lg self-center mt-6'
-                onClick={() => {
-                    setCode(props.suggestedCode);
-                    props.setSuggestedCode('');
-                    props.update(props.suggestedCode);
-                }}
-            >
-                Accept Changes
-            </button>
+            <div className='flex flex-row gap-4 self-center mt-6'>
+                <button
+                    className='upload-button rounded-lg px-8 py-3 cursor-pointer font-medium text-lg'
+                    onClick={() => {
+                        setCode(props.suggestedCode);
+                        setAccepted(true);
+                    }}
+                >
+                    Accept Changes
+                </button>
+                <button
+                    className='bg-green-600 hover:bg-green-700 text-white rounded-lg px-8 py-3 cursor-pointer font-medium text-lg transition-colors'
+                    onClick={() => props.update(code)}
+                >
+                    Save
+                </button>
+            </div>
         </div>
     );
 }
