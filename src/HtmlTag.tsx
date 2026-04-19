@@ -18,7 +18,7 @@ function HtmlTag(props: {
 }) {
     const isVoidElement: boolean = VOID_ELEMENTS.has(props.tag.tagName);
     const isSelfClosing: boolean = props.tag.error === 'SELF_CLOSING' || (isVoidElement && props.tag.error === null);
-    const isClosed: boolean = (!isVoidElement && props.tag.error !== 'UNCLOSED' && props.tag.error !== 'SELF_CLOSING') || (isVoidElement && props.tag.error === 'CLOSED');
+    const isClosed: boolean = (!isVoidElement && props.tag.error !== 'UNCLOSED' && props.tag.error !== 'SELF_CLOSING');
 
     return (
         <>

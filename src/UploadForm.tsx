@@ -1,14 +1,15 @@
 import CodeMirror from '@uiw/react-codemirror';
 import {html} from '@codemirror/lang-html';
+import { vscodeDark } from '@uiw/codemirror-theme-vscode';
+import { scrollX } from './extensions';
 import './UploadForm.css';
 import uploadIcon from './media/upload.png';
 import {useRef} from 'react';
-import { uploadHtml, type Tag, type UploadHtmlResponse } from './services/api';
 
 function UploadForm(props: {
-    setTags: (tags: Tag[]) => void,
-    originalHtml: string,
-    setOriginalHtml: (text: string) => void
+    submit: (html: string) => void;
+    code: string,
+    setCode: (code: string) => void
 }) {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -16,21 +17,12 @@ function UploadForm(props: {
         const file = e.target.files?.[0];
         if (!file) return;
         const reader = new FileReader();
-        reader.onload = (ev) => props.setOriginalHtml(ev.target?.result as string);
+        reader.onload = (ev) => props.setCode(ev.target?.result as string);
         reader.readAsText(file);
     }
 
-    async function submit() {
-        try {
-            const data: UploadHtmlResponse = await uploadHtml({ html: props.originalHtml });
-            props.setTags(data.tags);
-        } catch (err: any) {
-            console.log(err.message);
-        }
-    }
-
     return (
-        <div className='form flex flex-col w-[60vw] h-[80vh] rounded-2xl shadow-xl p-8'>
+        <div className='flex flex-col w-full h-full'>
             {/* Hidden file input */}
             <input 
                 ref={fileInputRef}
@@ -47,15 +39,16 @@ function UploadForm(props: {
             </button>
             <label className='text-base text-gray-400 mt-2'>Or paste here</label>
             <CodeMirror
-                value={props.originalHtml}
-                onChange={(value: string) => props.setOriginalHtml(value)}
-                height="50vh"
-                extensions={[html()]}
-                className='text-blue-400'
+                value={props.code}
+                onChange={(value: string) => props.setCode(value)}
+                theme={vscodeDark}
+                height='100%'
+                className='flex-1 min-h-0'
+                extensions={[html(), scrollX]}
             />
             <button 
-                className='flex flex-row items-center mt-6 upload-button rounded-lg px-8 py-3 cursor-pointer self-center font-medium text-xl'
-                onClick={submit}
+                className='flex flex-row items-center mt-3 upload-button rounded-lg px-8 py-3 cursor-pointer self-center font-medium text-xl'
+                onClick={() => props.submit(props.code)}
             >
                 Submit
             </button>

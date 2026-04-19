@@ -1,7 +1,16 @@
-.cm-mergeView {
-    height: 50vh;
-}
-
 .cm-mergeViewEditors {
     gap: 1rem;
+}
+
+/* Library forces height:auto !important on .cm-editor via 2-class selector.
+   3-class selector here wins. */
+.cm-mergeView .cm-mergeViewEditor .cm-editor {
+    height: 40vh !important;
+}
+
+/* Library forces height:auto !important and overflow-y:visible !important on .cm-scroller
+   via 3-class selector. 4-class selector here wins. */
+.cm-mergeView .cm-mergeViewEditors .cm-mergeViewEditor .cm-scroller {
+    height: 100% !important;
+    overflow-y: auto !important;
 }
