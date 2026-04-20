@@ -54,7 +54,7 @@ function App() {
         if (!tags.length) return; // No tags, return
 
         //if (html === code) return; // No changes, return
-
+        setCode(html);
         setTags(tags);
         setHeading('Analyzing code...');
         setSubheading('');
